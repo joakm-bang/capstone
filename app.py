@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect
-#from bokeh.charts import TimeSeries
-#from bokeh.embed import components
+from bokeh.charts import TimeSeries
+from bokeh.embed import components
 import bokeh
 import pandas as pd
 from random import random
@@ -9,6 +9,8 @@ import json
 from urllib2 import urlopen, HTTPError
 
 app = Flask(__name__)
+
+app.api_key = 'YzCQfNaj_RRvSF7Kcfkm'  #quandl api key
 
 @app.route('/')
 def main():
@@ -24,8 +26,8 @@ def index():
 		dat['Price'].append(random())
 	
 	data = pd.DataFrame.from_dict(dat)
-	plot = bokeh.charts.TimeSeries(data=data, legend=True, xlabel='Date', ylabel='$', title='Stock')
-	script, div = bokeh.embed.components(plot) 
+	plot = TimeSeries(data=data, legend=True, xlabel='Date', ylabel='$', title='Stock')
+	script, div = components(plot) 
 	
 	ticker = 'GOOG'
 	drange = ('2016-06-01', '2016-07-01')
