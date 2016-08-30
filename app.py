@@ -23,36 +23,13 @@ def index():
 	if request.method == 'GET':
 		return render_template('index.html')
 	if request.method == 'POST':
-	
-		#dat = dict()
-		#dat['Date'] = range(1000,1100)
-		#dat['Price'] = []
-		#for x in dat['Date']:
-			#dat['Price'].append(random())
-		
-		#data = pd.DataFrame.from_dict(dat)
-		#plot = TimeSeries(data=data, x='Date', y=['Price'], legend=True, xlabel='Date', ylabel='$', title='Stock')
-		#script, div = components(plot) 
-		
+			
 		ticker = request.form['ticker']
-		#ticker = 'GOOG'
-		#series = ['Close', 'Open']
 		keys = ['Close', 'Open', 'Adj. Open', 'Adj. Close', 'High', 'Low']
 		series = [s for s in keys if s in request.form.keys()]
-		drange = ('2016-06-01', '2016-07-01')
-		
-		
-		#read from csv for now
-		url = 'https://www.quandl.com/api/v3/datasets/WIKI/{0}.csv?trim_start={1}&trim_end={2}&api_key={3}'.format(ticker, str(drange[0]), str(drange[1]),app.api_key)
-		try:
-			csvdata = urlopen(url).read()
-		except HTTPError:
-			return render_template('index.html', ticker=ticker, error='Invalid ticker')
-		data = pd.read_csv(StringIO(csvdata.decode('utf-8')), index_col=0, parse_dates=True)
-		data['Date'] = data.index
-		plot = TimeSeries(data=data[['Open', 'Close']], legend=True, xlabel='Date', ylabel='$', title=ticker)
-		script, div = components(plot)
-		
+		if series == []:
+			series = ['Close']
+		drange = ('2016-07-01', '2016-08-01') #fix range	
 		
 		url = 'https://www.quandl.com/api/v3/datasets/WIKI/{0}.json?trim_start={1}&trim_end={2}&api_key={3}'.format(ticker, str(drange[0]), str(drange[1]),app.api_key)
 		try:
@@ -64,7 +41,7 @@ def index():
 		data.columns = jsondata['dataset']['column_names']
 		data.index = data.Date
 		pd.to_datetime(data.index)
-		plot = TimeSeries(data=data, x='Date', y=series, legend=True, xlabel='Date', ylabel='$', title='Stock')
+		plot = TimeSeries(data=data[::-1], x='Date', y=series, legend=True, xlabel='Date', ylabel='$', title=ticker)
 		script, div = components(plot) 	
 	
 		return render_template('graph.html', script=script, div=div)
