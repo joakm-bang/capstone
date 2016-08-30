@@ -4,6 +4,9 @@ from bokeh.embed import components
 import pandas as pd
 from random import random
 
+import json
+from urllib2 import urlopen, HTTPError
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -21,7 +24,21 @@ def index():
 	
 	data = pd.DataFrame.from_dict(dat)
 	plot = TimeSeries(data=data, legend=True, xlabel='Date', ylabel='$', title='Stock')
-	script, div = components(plot)  
+	script, div = components(plot) 
+	
+	ticker = 'GOOG'
+	drange = ('2016-06-01', '2016-07-01')
+	
+	url = 'https://www.quandl.com/api/v3/datasets/WIKI/{0}.json?trim_start={1}&trim_end={2}&api_key={3}'.format(ticker, str(drange[0]), str(drange[1]),app.api_key)
+	try:
+		jsondata = urlopen(url).read()
+	except HTTPError:
+		return render_template('index.html', ticker=ticker, error='Invalid ticker')
+	jsondata = json.loads(jsondata)
+	data = pd.DataFrame.from_dict(jsondata['dataset']['data'])	
+	data.columns = jsondata['dataset']['column_names']
+	data.index = data.Date
+	pd.to_datetime(data.index)	
 
 	return render_template('index.html', script=script, div=div)
 
