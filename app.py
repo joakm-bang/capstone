@@ -41,7 +41,9 @@ def index():
 	data = pd.DataFrame.from_dict(jsondata['dataset']['data'])	
 	data.columns = jsondata['dataset']['column_names']
 	data.index = data.Date
-	pd.to_datetime(data.index)	
+	pd.to_datetime(data.index)
+	plot = TimeSeries(data=data, legend=True, xlabel='Date', ylabel='$', title='Stock')
+	script, div = components(plot) 	
 
 	return render_template('index.html', script=script, div=div)
 
