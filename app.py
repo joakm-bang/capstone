@@ -24,18 +24,21 @@ def index():
 		return render_template('index.html')
 	if request.method == 'POST':
 	
-		dat = dict()
-		dat['Date'] = range(1000,1100)
-		dat['Price'] = []
-		for x in dat['Date']:
-			dat['Price'].append(random())
+		#dat = dict()
+		#dat['Date'] = range(1000,1100)
+		#dat['Price'] = []
+		#for x in dat['Date']:
+			#dat['Price'].append(random())
 		
-		data = pd.DataFrame.from_dict(dat)
-		plot = TimeSeries(data=data, x='Date', y=['Price'], legend=True, xlabel='Date', ylabel='$', title='Stock')
-		script, div = components(plot) 
+		#data = pd.DataFrame.from_dict(dat)
+		#plot = TimeSeries(data=data, x='Date', y=['Price'], legend=True, xlabel='Date', ylabel='$', title='Stock')
+		#script, div = components(plot) 
 		
-		ticker = 'GOOG'
-		series = ['Close', 'Open']
+		ticker = request.form['ticker']
+		#ticker = 'GOOG'
+		#series = ['Close', 'Open']
+		keys = ['Close', 'Open', 'Adj. Open', 'Adj. Close', 'High', 'Low']
+		series = [s for s in keys if s in request.form.keys()]
 		drange = ('2016-06-01', '2016-07-01')
 		
 		
