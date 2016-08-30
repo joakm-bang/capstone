@@ -4,19 +4,21 @@
 		<meta charset="utf-8"/>
 		<title>capstone</title>
 		<head>
-
+			<link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.0.min.css" type="text/css" />
+			<script type="text/javascript" src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.0.min.js"></script>
+			{{ script | safe }}
 		</head>
 
 		<body>
 			<div>
-			<form id='inputs' method='post' action='index' >
 				<p>Ticker: <input type='text' name='ticker' {%if ticker %}value='{{ticker}}'{% endif %}/></p>
 				<input type='checkbox' name='Close' value='Close'/> Closing price<br>
 				<input type='checkbox' name='Open' value='Open'/> Opening price<br>
 				<p><input type='submit' value='Submit' /></p>
-			</form>
 			</div>
-
+			<div>
+				{{ div | safe }}
+			</div>
 		</body>
 	</html>
 	
